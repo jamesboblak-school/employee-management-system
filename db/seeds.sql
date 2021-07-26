@@ -4,7 +4,7 @@ VALUES ("Engineering"),
        ("Legal"),
        ("Sales");
 
-INSERT INTO roles(rollName)
+INSERT INTO roles(roleName)
 VALUES ("Accountant"),
        ("Account Manager"),
        ("Lawyer"),
@@ -12,3 +12,6 @@ VALUES ("Accountant"),
        ("Legal Team Lead"),
        ("Salesperson"),
        ("Software Engineer");
+
+       INSERT INTO employees(lastName, firstName)
+VALUES ("Boblak", "James");

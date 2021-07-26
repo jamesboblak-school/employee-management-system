@@ -23,25 +23,25 @@ const connection = mysql.createConnection({
         user: 'root',
         // TODO: Add MySQL password
         password: 'MySQL42$@',
-        database: 'movies_db'
+        database: 'company_db'
     },
-    console.log(`Connected to the movies_db database.`)
+    console.log(`Connected to the company_db database.`)
 );
 
 
 // ROUTES
 //  GET
-app.get('/api/movies', (req, res) => {
-    connection.query("SELECT * FROM movies", function(results){
+// app.get('/api/company', (req, res) => {
+//     connection.query("SELECT * FROM company", function(results){
         
-    });
-    res.console.log("Hello!!")
-});
+//     });
+//     res.console.log("Hello, James!!")
+// });
 
 
-app.listen(PORT, () =>
-    console.log(`App listening at http://localhost:${PORT} :rocket:`)
-);
+// app.listen(PORT, () =>
+//     console.log(`App listening at http://localhost:${PORT} :rocket:`)
+// );
 
 
 
