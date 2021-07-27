@@ -38,8 +38,9 @@ function startMenu() {
                     'Add a Role',
                     'Add an Employee',
                     'Update an Employee Role',
-                    'Delete a Role',
                     'Delete a Department',
+                    'Delete a Role',
+                    'Delete an Employee',
                     'Exit'
                 ]
             },
@@ -109,6 +110,14 @@ function startMenu() {
                 name: 'deleteDepartment',
                 when: (answers) => answers.options === 'Delete a Department'
             },
+
+            // Delete an Employee
+            {
+                type: 'input',
+                message: 'What is the id of the employee you would like to delete?',
+                name: 'deleteEmployee',
+                when: (answers) => answers.options === 'Delete an Employee'
+            },
         ])
 
         // Print user input to the console
@@ -125,38 +134,50 @@ function startMenu() {
                     startMenu();
                 })
             } else if (response.options === "View All Departments") {
-                const query = "SELECT * FROM departments"
+                const query = "SELECT * FROM departments ORDER BY departments.departmentName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
                     }
+                    console.log("===============")
+                    console.log("==Departments==")
+                    console.log("===============")
                     console.table(results);
                     startMenu();
                 })
             } else if (response.options === "View All Roles") {
-                const query = "SELECT * FROM roles"
+                const query = "SELECT * FROM roles ORDER BY roles.roleName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
                     }
+                    console.log("=========")
+                    console.log("==Roles==")
+                    console.log("=========")
                     console.table(results);
                     startMenu();
                 })
             } else if (response.options === "View All Employees") {
-                const query = "SELECT * FROM employees"
+                const query = "SELECT * FROM employees ORDER BY employees.lastName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
                     }
+                    console.log("=============")
+                    console.log("==Employees==")
+                    console.log("=============")
                     console.table(results);
                     startMenu();
                 })
             } else if (response.options === "View All Managers") {
-                const query = "SELECT * FROM managers"
+                const query = "SELECT * FROM managers ORDER BY managers.lastName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
                     }
+                    console.log("============")
+                    console.log("==Managers==")
+                    console.log("============")
                     console.table(results);
                     startMenu();
                 })
@@ -165,7 +186,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.table(results);
+                    console.log(results + " Role successfully added!");
                     startMenu();
                 })
             } else if (response.options === "Delete a Role") {
@@ -173,7 +194,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results);
+                    console.log(results + " Role successfully deleted!");
                     startMenu();
                 })
             } else if (response.options === "Delete a Department") {
@@ -181,7 +202,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results);
+                    console.log(results + " Department successfully deleted!");
                     startMenu();
                 })
             } else if (response.options === "Add an Employee") {
@@ -189,10 +210,19 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.table(results);
+                    console.log(results + " Employee successfully added!");
+                    startMenu();
+                })
+            } else if (response.options === "Delete an Employee") {
+                connection.query("DELETE FROM employees WHERE id = ?", [response.deleteEmployee], function (error, results) {
+                    if (error) {
+                        return console.error(error.message);
+                    }
+                    console.log(results + " Employee successfully deleted!");
                     startMenu();
                 })
             } else if (response.options === "Exit") {
+                console.log("Goodbye!")
                 connection.end();
             }
         });
