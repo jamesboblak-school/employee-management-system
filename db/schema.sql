@@ -21,9 +21,10 @@ CREATE TABLE employees (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     lastName VARCHAR(30) NOT NULL,
     firstName VARCHAR(30) NOT NULL, 
-    manager_id iNT NULL,
-    FOREIGN KEY manager_id REFERENCES employees manager_id ON DELETE SET NULL
-
+    manager_id INT
+    -- FOREIGN KEY (manager_id)
+    -- REFERENCES employees(manager_id)
+    -- ON DELETE SET NULL
 );
 
 -- CREATE TABLE employees (

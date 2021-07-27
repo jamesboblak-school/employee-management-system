@@ -7,27 +7,18 @@ const {
     userInfo
 } = require("os");
 
-// const PORT = process.env.PORT || 3001;
-// const app = express();
-
-// // Express middleware
-// app.use(express.urlencoded({
-//     extended: false
-// }));
-// app.use(express.json());
 
 // Create MySQL login
 const connection = mysql.createConnection({
         host: 'localhost',
         // MySQL username,
         user: 'root',
-        // TODO: Add MySQL password
+        // MySQL password
         password: 'MySQL42$@',
         database: 'company_db'
     },
     console.log(`Connected to the company_db database.`)
 );
-
 
 let names = [];
 connection.query("SELECT firstName, lastName FROM employees", function (err, results) {
@@ -38,21 +29,26 @@ connection.query("SELECT firstName, lastName FROM employees", function (err, res
         names.push(results[i].firstName);   
     }
 });
-// ROUTES
-//  GET
-// app.get('/api/company', (req, res) => {
-//     connection.query("SELECT * FROM company", function(results){
 
-//     });
-//     res.console.log("Hello, James!!")
-// });
+let departmentsArr = [];
+connection.query("SELECT departmentName FROM departments", function (err, results) {
+    if (err){
+        console.log(err);
+    }
+    for(var i = 0; i < results.length; i++){
+        departmentsArr.push(results[i].departmentName);   
+    }
+});
 
-
-// app.listen(PORT, () =>
-//     console.log(`App listening at http://localhost:${PORT} :rocket:`)
-// );
-
-
+let rolesArr = [];
+connection.query("SELECT roleName FROM roles", function (err, results) {
+    if (err){
+        console.log(err);
+    }
+    for(var i = 0; i < results.length; i++){
+        rolesArr.push(results[i].roleName);   
+    }
+});
 
 // Array of questions for user input
 inquirer
@@ -60,7 +56,14 @@ inquirer
             type: 'list',
             message: 'What would you like to do?',
             name: 'options',
-            choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
+            choices: ['View All Departments',
+            'View All Roles',
+            'View All Employees',
+            'Add a Department',
+            'Add a Role',
+            'Add an Employee',
+            'Update an Employee Role',
+            'Delete a Role']
         },
 
         // ## View All Departments
@@ -68,14 +71,8 @@ inquirer
             type: 'list',
             message: 'View All Departments',
             name: 'allDepartments',
-            choices: ['Engineering', 'Finance', 'Legal', 'Sales'],
+            choices: departmentsArr,
             when: (answers) => answers.options === 'View All Departments'
-        },
-        {
-            type: 'input',
-            message: 'What is the new deptartments name?',
-            name: 'departmentName',
-            when: (answers) => answers.options === 'Add a Department'
         },
 
         // ## View All Roles
@@ -83,7 +80,7 @@ inquirer
             type: 'list',
             message: 'View All Roles',
             name: 'allRoles',
-            choices: ['Accountant', 'Account Manager', 'Lawyer', 'Lead Engineer', 'Legal Team Lead', 'Salesperson', 'Software Engineer'],
+            choices: rolesArr,
             when: (answers) => answers.options === 'View All Roles'
         },
 
@@ -92,9 +89,57 @@ inquirer
             type: 'list',
             message: 'View All Employees',
             name: 'allEmployees',
-            choices: names
+            choices: names,
+            when: (answers) => answers.options === 'View All Employees'
         },
 
+        // Add new Department
+        {
+            type: 'input',
+            message: 'What is the name of the new department?',
+            name: 'departmentName',
+            when: (answers) => answers.options === 'Add a Department'
+        },
+
+        // Add new Role
+        {
+            type: 'input',
+            message: 'What is the name of the new role?',
+            name: 'roleName',
+            when: (answers) => answers.options === 'Add a Role'
+        },
+
+        // Add new Employee
+        {
+            type: 'input',
+            message: 'What is the last name of the new employee?',
+            name: 'lastName',
+            when: (answers) => answers.options === 'Add an Employee'
+        },
+        {
+            type: 'input',
+            message: 'What is the first name of the new employee?',
+            name: 'firstName',
+            when: (answers) => answers.options === 'Add an Employee'
+        },
+        {
+            type: 'input',
+            message: 'What is the manager ID for the manager of the new employee?',
+            name: 'managerId',
+            when: (answers) => answers.options === 'Add an Employee'
+        },
+        {
+            type: 'input',
+            message: 'What is the role of the new employee?',
+            name: 'employeeRole',
+            when: (answers) => answers.options === 'Add an Employee'
+        },
+        {
+            type: 'input',
+            message: 'What role would you like to delete?',
+            name: 'deleteRole',
+            when: (answers) => answers.options === 'Delete a Role'
+        },
     ])
 
     // Print user input to the console
@@ -102,31 +147,38 @@ inquirer
 
         if(response.options === "Add a Department"){
             // connect to mysql and insert the data into the database
-            connection.query("INSERT INTO departnment VALUES (?)", [response.departmentName], function (err, results) {
-
-            })
-        } else if (response.options === "Add a Role"){
-            connection.query("INSERT INTO roles VALUES (?)", [response.roleName], function (err, results) {
-
-            })
-        } else if (response.options === "View Roles"){
-            connection.query("SELECT * FROM roles", function (results) {
+            connection.query("INSERT INTO departments VALUES (?)", [response.departmentName], function (error, results) {
+                if(error){
+                    return console.error(error.message);
+                }
                 console.log(results);
             })
-        }
-         else if (response.options === "delete Roles"){
-            connection.query("DELETE FROM roles WHERE roleName = ?", [response.roleName], function (results) {
+        }   else if (response.options === "Add a Role"){
+            connection.query("INSERT INTO roles VALUES (?)", [response.roleName], function (error, results) {
+                if(error){
+                    return console.error(error.message);
+                }
                 console.log(results);
             })
+        }   else if (response.options === "View Roles"){
+            connection.query("SELECT * FROM roles", function (error, results) {
+                if(error){
+                    return console.error(error.message);
+                }
+                console.log(results);
+            })
+        }   else if (response.options === "delete Roles"){
+            connection.query("DELETE FROM roles WHERE roleName = ?", [response.roleName], function (error, results) {
+                if(error){
+                    return console.error(error.message);
+                }
+                console.log(results);
+            })
+        }   else if (response.options === "Add an Employee"){
+            connection.query("INSERT INTO employees VALUES (?, ?, ?, ?)", [response.lastName, response.firstName, response.managerId, response.employeeRole], function (error, results) {
+                if(error){
+                    return console.error(error.message);
+                }
+                console.log(results);            })
         }
-
-
-        // // Contents of outputReport.md file
-        // const outputReport =
-        //     `${response.title}`;
-
-        // // Create the output.md file in ./output/ or show error if unsuccessful
-        // fs.writeFile("./output/outputReport.md", outputReport, (err) =>
-        //     err ? console.error(err) : console.log('Success!  Your new, outputReport.md is in ./output :)')
-        // );
     });
