@@ -13,8 +13,8 @@ VALUES  ("Accountant"),
         ("Salesperson"),
         ("Software Engineer");
 
-INSERT INTO employees(lastName, firstName, manager_id)
-VALUES  ("Boblak", "James", 1),
-        ("Cottrell", "Emma", 1),
-        ("Mercury", "Freddie", 0);
+INSERT INTO employees(lastName, firstName, salary, manager_id)
+VALUES  ("Boblak", "James", 100000, 1),
+        ("Cottrell", "Emma", 200000, 1),
+        ("Mercury", "Freddie", 300000, 0);
 
