@@ -16,25 +16,23 @@ CREATE TABLE roles (
     roleName VARCHAR(30) NOT NULL
 );
 
+-- Managers table
+CREATE TABLE managers (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    lastName VARCHAR(30) NOT NULL,
+    firstName VARCHAR(30) NOT NULL,
+    salary INT NOT NULL
+);
+
 -- Employees TABLE
 CREATE TABLE employees (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     lastName VARCHAR(30) NOT NULL,
     firstName VARCHAR(30) NOT NULL,
-    salary INT NOT NULL, 
+    salary INT NOT NULL,
+    eRole VARCHAR(30),
     manager_id INT
     -- FOREIGN KEY (manager_id)
-    -- REFERENCES employees(manager_id)
+    -- REFERENCES managers(id)
     -- ON DELETE SET NULL
 );
-
--- CREATE TABLE employees (
---     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
---     lastName VARCHAR(30) NOT NULL,
---     firstName VARCHAR(30) NOT NULL,
---     roleID INT NOT NULL,
---     managerID INT FOREIGN KEY REFERENCES ?????,
---     ON DELETE SET NULL
--- );
-
-SELECT * FROM departments
