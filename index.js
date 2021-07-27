@@ -95,6 +95,20 @@ function startMenu() {
                 when: (answers) => answers.options === 'Add an Employee'
             },
 
+            // Update an Employee Role
+            {
+                type: 'input',
+                message: 'What employee would you like update?',
+                name: 'updateEmployee',
+                when: (answers) => answers.options === 'Update an Employee Role'
+            },
+            {
+                type: 'input',
+                message: 'What role would you like to update to?',
+                name: 'updateRole',
+                when: (answers) => answers.options === 'Update an Employee Role'
+            },
+
             // Delete a Role
             {
                 type: 'input',
@@ -211,6 +225,14 @@ function startMenu() {
                         return console.error(error.message);
                     }
                     console.log(results + " Employee successfully added!");
+                    startMenu();
+                })
+            } else if (response.options === "Update an Employee Role") {
+                connection.query("UPDATE employees SET eRole = ? WHERE id = ?", [response.updateRole, response.updateEmployee], function (error, results) {
+                    if (error) {
+                        return console.error(error.message);
+                    }
+                    console.log(results + " Employee role successfully updated!");
                     startMenu();
                 })
             } else if (response.options === "Delete an Employee") {
