@@ -7,14 +7,14 @@ const {
     userInfo
 } = require("os");
 
-const PORT = process.env.PORT || 3001;
-const app = express();
+// const PORT = process.env.PORT || 3001;
+// const app = express();
 
-// Express middleware
-app.use(express.urlencoded({
-    extended: false
-}));
-app.use(express.json());
+// // Express middleware
+// app.use(express.urlencoded({
+//     extended: false
+// }));
+// app.use(express.json());
 
 // Create MySQL login
 const connection = mysql.createConnection({
@@ -29,11 +29,20 @@ const connection = mysql.createConnection({
 );
 
 
+let names = [];
+connection.query("SELECT firstName, lastName FROM employees", function (err, results) {
+    if (err){
+        console.log(err);
+    }
+    for(var i = 0; i < results.length; i++){
+        names.push(results[i].firstName);   
+    }
+});
 // ROUTES
 //  GET
 // app.get('/api/company', (req, res) => {
 //     connection.query("SELECT * FROM company", function(results){
-        
+
 //     });
 //     res.console.log("Hello, James!!")
 // });
@@ -50,7 +59,7 @@ inquirer
     .prompt([{
             type: 'list',
             message: 'What would you like to do?',
-            name: 'viewOptions',
+            name: 'options',
             choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
         },
 
@@ -59,7 +68,14 @@ inquirer
             type: 'list',
             message: 'View All Departments',
             name: 'allDepartments',
-            choices: ['Engineering', 'Finance', 'Legal', 'Sales']
+            choices: ['Engineering', 'Finance', 'Legal', 'Sales'],
+            when: (answers) => answers.options === 'View All Departments'
+        },
+        {
+            type: 'input',
+            message: 'What is the new deptartments name?',
+            name: 'departmentName',
+            when: (answers) => answers.options === 'Add a Department'
         },
 
         // ## View All Roles
@@ -67,7 +83,8 @@ inquirer
             type: 'list',
             message: 'View All Roles',
             name: 'allRoles',
-            choices: ['Accountant', 'Account Manager', 'Lawyer', 'Lead Engineer', 'Legal Team Lead', 'Salesperson', 'Software Engineer']
+            choices: ['Accountant', 'Account Manager', 'Lawyer', 'Lead Engineer', 'Legal Team Lead', 'Salesperson', 'Software Engineer'],
+            when: (answers) => answers.options === 'View All Roles'
         },
 
         // ## View All Employees
@@ -75,21 +92,41 @@ inquirer
             type: 'list',
             message: 'View All Employees',
             name: 'allEmployees',
-            choices: [allEmployees]
+            choices: names
         },
 
     ])
 
     // Print user input to the console
     .then((response) => {
-        console.log(response);
 
-        // Contents of outputReport.md file
-        const outputReport =
-            `${response.title}`;
+        if(response.options === "Add a Department"){
+            // connect to mysql and insert the data into the database
+            connection.query("INSERT INTO departnment VALUES (?)", [response.departmentName], function (err, results) {
 
-        // Create the output.md file in ./output/ or show error if unsuccessful
-        fs.writeFile("./output/outputReport.md", outputReport, (err) =>
-            err ? console.error(err) : console.log('Success!  Your new, outputReport.md is in ./output :)')
-        );
+            })
+        } else if (response.options === "Add a Role"){
+            connection.query("INSERT INTO roles VALUES (?)", [response.roleName], function (err, results) {
+
+            })
+        } else if (response.options === "View Roles"){
+            connection.query("SELECT * FROM roles", function (results) {
+                console.log(results);
+            })
+        }
+         else if (response.options === "delete Roles"){
+            connection.query("DELETE FROM roles WHERE roleName = ?", [response.roleName], function (results) {
+                console.log(results);
+            })
+        }
+
+
+        // // Contents of outputReport.md file
+        // const outputReport =
+        //     `${response.title}`;
+
+        // // Create the output.md file in ./output/ or show error if unsuccessful
+        // fs.writeFile("./output/outputReport.md", outputReport, (err) =>
+        //     err ? console.error(err) : console.log('Success!  Your new, outputReport.md is in ./output :)')
+        // );
     });
