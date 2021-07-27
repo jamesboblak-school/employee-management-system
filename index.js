@@ -65,7 +65,8 @@ function startMenu() {
                 'Add an Employee',
                 'Update an Employee Role',
                 'Delete a Role',
-                'Delete a Department'
+                'Delete a Department',
+                'Exit'
             ]
         },
 
@@ -200,6 +201,8 @@ function startMenu() {
                 console.table(results);
                 startMenu();
             })
+        }else if (response.options === "Exit") {
+            connection.end();
         } 
     });
 }
