@@ -18,7 +18,7 @@ CREATE TABLE roles (
 
 -- Managers table
 CREATE TABLE managers (
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL,
     lastName VARCHAR(30) NOT NULL,
     firstName VARCHAR(30) NOT NULL,
     salary INT NOT NULL,

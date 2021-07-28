@@ -55,6 +55,7 @@ connection.query("SELECT roleName FROM roles", function (err, results) {
                     'Delete a Department',
                     'Delete a Role',
                     'Delete an Employee',
+                    'Promote an Employee',
                     'Exit'
                 ]
             },
@@ -147,6 +148,14 @@ connection.query("SELECT roleName FROM roles", function (err, results) {
                 message: 'What is the ID of the employee you would like to delete?',
                 name: 'deleteEmployee',
                 when: (answers) => answers.options === 'Delete an Employee'
+            },
+
+            // Promote an Employee
+            {
+                type: 'input',
+                message: 'What is the ID of the employee you would like to promote?',
+                name: 'promoteEmployee',
+                when: (answers) => answers.options === 'Promote an Employee'
             },
         ])
 
@@ -260,6 +269,20 @@ connection.query("SELECT roleName FROM roles", function (err, results) {
                         return console.error(error.message);
                     }
                     console.log("Employee successfully deleted!");
+                    startMenu();
+                })
+            } else if (response.options === "Promote an Employee") {
+                connection.query("INSERT INTO managers SELECT id, lastName, firstName, salary FROM employees WHERE id = ?", [response.promoteEmployee], function (error, results) {
+                    if (error) {
+                        return console.error(error.message);
+                    }
+                    console.log("Employee successfully promoted!");
+                    connection.query("DELETE FROM employees WHERE id = ?", [response.promoteEmployee], function (error, results) {
+                        if (error) {
+                            return console.error(error.message);
+                        }
+                        console.log("Employee successfully switched from employees to managers!");
+                    })
                     startMenu();
                 })
             } else if (response.options === "Exit") {
