@@ -15,7 +15,12 @@ https://github.com/jamesboblak/employee-management-system
 
 ## Installation
 
-1. Clone the app from the link above  2. <code>npm install</code> within the local repository  3.  <code>node index.js</code> to run the app  4.  Follow the simple, on-screen prompts to manage your team  
+1. Clone the app from the link above
+2. <code>mysql -u root -p</code> in the db folder
+3. <code>SOURCE schema.sql</code> then <code>SOURCE seeds.sql</code>
+4. <code>npm install</code> within your local repository
+5.  <code>node index.js</code> to run the app
+6.  Follow the simple, on-screen prompts to manage your team  
 
 
 ## Usage 
