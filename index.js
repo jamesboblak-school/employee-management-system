@@ -97,9 +97,10 @@ connection.query("SELECT roleName FROM roles", function (err, results) {
                 when: (answers) => answers.options === 'Add an Employee'
             },
             {
-                type: 'input',
+                type: 'list',
                 message: 'What is the role of the new employee?',
                 name: 'employeeRole',
+                choices: rolesArr,
                 when: (answers) => answers.options === 'Add an Employee'
             },
             {
