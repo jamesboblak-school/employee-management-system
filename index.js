@@ -7,7 +7,6 @@ const {
     userInfo
 } = require("os");
 
-
 // Create MySQL login
 const connection = mysql.createConnection({
         host: 'localhost',
@@ -98,7 +97,7 @@ function startMenu() {
             // Update an Employee Role
             {
                 type: 'input',
-                message: 'What employee would you like update?',
+                message: 'What is the ID of the employee you would like update?',
                 name: 'updateEmployee',
                 when: (answers) => answers.options === 'Update an Employee Role'
             },
@@ -106,6 +105,7 @@ function startMenu() {
                 type: 'input',
                 message: 'What role would you like to update to?',
                 name: 'updateRole',
+                // choices: rolesArr,
                 when: (answers) => answers.options === 'Update an Employee Role'
             },
 
@@ -128,7 +128,7 @@ function startMenu() {
             // Delete an Employee
             {
                 type: 'input',
-                message: 'What is the id of the employee you would like to delete?',
+                message: 'What is the ID of the employee you would like to delete?',
                 name: 'deleteEmployee',
                 when: (answers) => answers.options === 'Delete an Employee'
             },
@@ -140,15 +140,14 @@ function startMenu() {
             if (response.options === "Add a Department") {
                 // connect to mysql and insert the data into the database
                 connection.query("INSERT INTO departments (departmentName) VALUES (?)", [response.departmentName], (error, results) => {
-                    console.table(results);
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results);
+                    console.log("New department successfully added!");
                     startMenu();
                 })
             } else if (response.options === "View All Departments") {
-                const query = "SELECT * FROM departments ORDER BY departments.departmentName ASC"
+                const query = "SELECT departmentName AS Department, id AS ID FROM departments ORDER BY departments.departmentName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
@@ -160,7 +159,7 @@ function startMenu() {
                     startMenu();
                 })
             } else if (response.options === "View All Roles") {
-                const query = "SELECT * FROM roles ORDER BY roles.roleName ASC"
+                const query = "SELECT roleName AS Role, id AS ID FROM roles ORDER BY roles.roleName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
@@ -172,7 +171,9 @@ function startMenu() {
                     startMenu();
                 })
             } else if (response.options === "View All Employees") {
-                const query = "SELECT * FROM employees ORDER BY employees.lastName ASC"
+                // const query = "SELECT * FROM employees ORDER BY employees.lastName ASC"
+                const query = "SELECT lastName AS Last_Name, firstName AS First_Name, id AS ID, salary AS Salary, eRole AS Role, manager_id AS Manager_ID FROM employees ORDER BY employees.lastName ASC"
+
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
@@ -184,7 +185,8 @@ function startMenu() {
                     startMenu();
                 })
             } else if (response.options === "View All Managers") {
-                const query = "SELECT * FROM managers ORDER BY managers.lastName ASC"
+                // const query = "SELECT * FROM managers ORDER BY managers.lastName ASC"
+                const query = "SELECT lastName AS Last_Name, firstName AS First_Name, id AS ID, salary AS Salary FROM managers ORDER BY managers.lastName ASC"
                 connection.query(query, function (error, results) {
                     if (error) {
                         return console.error(error.message);
@@ -200,7 +202,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results + " Role successfully added!");
+                    console.log("Role successfully added!");
                     startMenu();
                 })
             } else if (response.options === "Delete a Role") {
@@ -208,7 +210,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results + " Role successfully deleted!");
+                    console.log("Role successfully deleted!");
                     startMenu();
                 })
             } else if (response.options === "Delete a Department") {
@@ -216,7 +218,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results + " Department successfully deleted!");
+                    console.log("Department successfully deleted!");
                     startMenu();
                 })
             } else if (response.options === "Add an Employee") {
@@ -224,7 +226,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results + " Employee successfully added!");
+                    console.log("Employee successfully added!");
                     startMenu();
                 })
             } else if (response.options === "Update an Employee Role") {
@@ -232,7 +234,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results + " Employee role successfully updated!");
+                    console.log("Employee role successfully updated!");
                     startMenu();
                 })
             } else if (response.options === "Delete an Employee") {
@@ -240,7 +242,7 @@ function startMenu() {
                     if (error) {
                         return console.error(error.message);
                     }
-                    console.log(results + " Employee successfully deleted!");
+                    console.log("Employee successfully deleted!");
                     startMenu();
                 })
             } else if (response.options === "Exit") {

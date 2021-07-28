@@ -18,10 +18,11 @@ CREATE TABLE roles (
 
 -- Managers table
 CREATE TABLE managers (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT,
     lastName VARCHAR(30) NOT NULL,
     firstName VARCHAR(30) NOT NULL,
-    salary INT NOT NULL
+    salary INT NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- Employees TABLE
@@ -31,7 +32,9 @@ CREATE TABLE employees (
     firstName VARCHAR(30) NOT NULL,
     salary INT NOT NULL,
     eRole VARCHAR(30),
-    manager_id INT
+    manager_id INT NULL
+    -- CONSTRAINT employees_ibfk_1,
+    -- PRIMARY KEY (id)
     -- FOREIGN KEY (manager_id)
     -- REFERENCES managers(id)
     -- ON DELETE SET NULL
