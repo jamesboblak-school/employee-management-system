@@ -1,5 +1,8 @@
 // Include packages needed for this application
 // const fs = require('fs');
+const {
+    response
+} = require("express");
 const express = require("express");
 const inquirer = require('inquirer');
 const mysql = require("mysql2");
@@ -19,11 +22,23 @@ const connection = mysql.createConnection({
     console.log(`Connected to the company_db database.`)
 );
 
+
 // Start the prompt
 startMenu();
 
 // Array of questions for user input
 function startMenu() {
+
+    // make an array with all the Roles in it
+    let rolesArr = [];
+connection.query("SELECT roleName FROM roles", function (err, results) {
+    if (err) {
+        console.log(err);
+    }
+    for (var i = 0; i < results.length; i++) {
+        rolesArr.push(results[i].roleName);
+    }
+});
     inquirer
         .prompt([{
                 type: 'list',
@@ -102,10 +117,10 @@ function startMenu() {
                 when: (answers) => answers.options === 'Update an Employee Role'
             },
             {
-                type: 'input',
+                type: 'list',
                 message: 'What role would you like to update to?',
                 name: 'updateRole',
-                // choices: rolesArr,
+                choices: rolesArr,
                 when: (answers) => answers.options === 'Update an Employee Role'
             },
 
@@ -133,6 +148,7 @@ function startMenu() {
                 when: (answers) => answers.options === 'Delete an Employee'
             },
         ])
+
 
         // Print user input to the console
         .then((response) => {
